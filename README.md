@@ -22,19 +22,19 @@ The main difference between RRBS and ERRBS ibrary preparation protocols is the s
 RRBS only interrogates CpGs within short MspI delimited fragments between 40 to 220 bp, making it biased towards representing CpG islands, which typically contain more densely clustered MspI sites. In order to enhance the capture of regions beyond CpG islands, MspI fragments ranging from 70–320 bp are selected instead. This enhanced RRBS (ERRBS) method yielded a 75% increase in coverage of CpG sites with a 54% increase in coverage of CpG shores. 
 
 ### Analysis 
-## Read in methylcall files
+__Read in methylcall files:__
 
 errbs <- read.table("/Users/shazedaomar/Downloads/cpg.IMR90_75ng_K_RRBS_2.mincov10.txt", header = TRUE) 
 
-## plot methylation values
+__Plot methylation values:__
 
 Hist(errbs$freqC, main="Methylation-RRBS Data", xlab="FreqC", col="red", border="black")
 
-## compare site calls
-## Calculate the amount of sites
+__Comparing site calls__
+__Calculate the amount of sites:__
 
 nrows(errbs)
 
-## Calculate the amount of common sites 
+__Calculate the amount of common sites:__ 
 
 common <- intersect(errbs$chrBase,MethylFile$chrBase) 
