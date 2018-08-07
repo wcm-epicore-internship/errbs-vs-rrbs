@@ -38,3 +38,4 @@ nrows(errbs)
 __Calculate the amount of common sites:__ 
 
 common <- intersect(errbs$chrBase,rrbs$chrBase) 
+length(common)
