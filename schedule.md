@@ -1,8 +1,10 @@
 # Schedule
 
-## ERRBS and RRBS libraries
+## Background
+- ERRBS and RRBS libraries
 - What's the difference in the library preparation protocols?
   - The [ERRBS paper](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1002781)
+- what about other methods? For example wgbs, methylome capture
 
 ## Methylcall data
 - We use [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) to align the sequencing reads (fastq) and genreate methylation calls
@@ -11,7 +13,7 @@
 
 ## Find the datasets for each
 
-## Analysis
+## Description of Project
 - in R or Python
   - read in methylcall files
   - plot methylation values
