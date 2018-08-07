@@ -15,3 +15,10 @@ __Protocol:__
 1. Size Selection/Reduced representation: Cut out a small section of the genome, 40-200 bp fragments (2.5 of the genome, but CpG rich). Avoids a lot of sequencing, while focusing on CpG rich regions that are more likely to cause changes in gene expression (CpG islands).
 1. Bisulfate conversion: distinguish between methylated and un-methylated cytosine. 
 1. PCR amplification and sequencing. 
+
+__Enhanced Reduced representation bisulfite sequencing (ERRBS):__ provides biochemical and bioinformatic methodological improvements that generate more extensive and balanced coverage of methylation (improving the coverage of regions outside CpG islands).
+
+The main difference between RRBS and ERRBS ibrary preparation protocols is the size selection is no longer done in ERRBS. 
+RRBS only interrogates CpGs within short MspI delimited fragments between 40 to 220 bp, making it biased towards representing CpG islands, which typically contain more densely clustered MspI sites. In order to enhance the capture of regions beyond CpG islands, MspI fragments ranging from 70–320 bp are selected instead. This enhanced RRBS (ERRBS) method yielded a 75% increase in coverage of CpG sites with a 54% increase in coverage of CpG shores. 
+
+
