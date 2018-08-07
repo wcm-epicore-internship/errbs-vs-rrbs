@@ -21,6 +21,7 @@ __Enhanced Reduced representation bisulfite sequencing (ERRBS):__ provides bioch
 The main difference between RRBS and ERRBS ibrary preparation protocols is the size selection is no longer done in ERRBS. 
 RRBS only interrogates CpGs within short MspI delimited fragments between 40 to 220 bp, making it biased towards representing CpG islands, which typically contain more densely clustered MspI sites. In order to enhance the capture of regions beyond CpG islands, MspI fragments ranging from 70–320 bp are selected instead. This enhanced RRBS (ERRBS) method yielded a 75% increase in coverage of CpG sites with a 54% increase in coverage of CpG shores. 
 
+```
 ### Analysis 
 __Read in methylcall files:__
 
@@ -41,3 +42,5 @@ __Calculate the amount of common sites:__
 common <- intersect(errbs$chrBase,rrbs$chrBase) 
 
 length(common)
+
+```
