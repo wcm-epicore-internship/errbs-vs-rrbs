@@ -24,7 +24,7 @@ RRBS only interrogates CpGs within short MspI delimited fragments between 40 to 
 ### Analysis 
 __Read in methylcall files:__
 
-errbs <- read.table("/Users/shazedaomar/Downloads/cpg.IMR90_75ng_K_RRBS_2.mincov10.txt", header = TRUE) 
+errbs <- read.table("/Methyl/File/Path.txt", header = TRUE) 
 
 __Plot methylation values:__
 
@@ -37,4 +37,4 @@ nrows(errbs)
 
 __Calculate the amount of common sites:__ 
 
-common <- intersect(errbs$chrBase,MethylFile$chrBase) 
+common <- intersect(errbs$chrBase,rrbs$chrBase) 
