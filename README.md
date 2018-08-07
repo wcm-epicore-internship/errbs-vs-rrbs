@@ -39,7 +39,7 @@ __Calculate the amount of sites:__
 
 __Calculate the amount of common sites:__ 
 
-``` common <- intersect(errbs$chrBase,rrbs$chrBase) 
+``` common <- intersect(errbs$chrBase,rrbs$chrBase) ```
 
-length(common) ```
+``` length(common) ```
 
