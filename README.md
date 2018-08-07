@@ -35,10 +35,11 @@ __Comparing site calls__
 
 __Calculate the amount of sites:__
 
-nrows(errbs)
+```nrows(errbs) ``` 
 
 __Calculate the amount of common sites:__ 
 
+```
 common <- intersect(errbs$chrBase,rrbs$chrBase) 
 
 length(common)
