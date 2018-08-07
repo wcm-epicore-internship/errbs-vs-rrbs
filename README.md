@@ -31,6 +31,7 @@ __Plot methylation values:__
 Hist(errbs$freqC, main="Methylation-RRBS Data", xlab="FreqC", col="red", border="black")
 
 __Comparing site calls__
+
 __Calculate the amount of sites:__
 
 nrows(errbs)
