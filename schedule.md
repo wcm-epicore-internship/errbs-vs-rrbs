@@ -1,8 +1,10 @@
 # Schedule
 
 **Week 1 - Week 3:** Read background articles on DNA methylation, CpG islands and methylation library protocols such as ERRBS, RRBS, WGBS and Methylome capture. 
+
 **Week 4 – Week 6:** Compare methylation library protocols. What's the difference in the library preparation protocols?
 - The [ERRBS paper](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1002781)
+
 **Week 7 – Week 9:** Read about the MethylKit and install into R studio. Run analysis on data from datasets such as ERRBS, RRBS, WGBS, etc. Include reading methylcall files, compute statistics, plot methylation values and compare methylation site calls. 
 **Methylcall data**
 - We use [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) to align the sequencing reads (fastq) and genreate methylation calls
