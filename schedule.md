@@ -7,19 +7,17 @@
 
 **Week 7 – Week 9:** Read about the MethylKit and install into R studio. Run analysis on data using library protocol data and include reading methylcall files, computing statistics, plot methylation values and compare methylation site calls.
 
-**Methylcall data**
-- We use [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) to align the sequencing reads (fastq) and genreate methylation calls
-  - It would be useful to look at [Bismark paper](https://academic.oup.com/bioinformatics/article/27/11/1571/216956) and their [RRBS guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/RRBS_Guide.pdf)
-  - The authors of the errbs paper developed, [methylKit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3491415/), software for analyzing methyllation data
-
-<<<<<<< HEAD
 **Week 10 - Week 15:** Create bash scripts that can perform numerous analysis on the DNA methylation files including coverage, filtering, identifying the methylated value of cytosine or CpG islands and compute statistics.
 Week 16 - Week 18: Update the GitHub repository, Readme file. Prepare the final report and presentation.
 =======
 **Week 10 - Week 15:** Create R and bash scripts that can perform numerous analysis on the DNA methylation data such as coverage, filtering and identifying the methylated value of cytosine or CpG islands. 
 
 **Week 16 - Week 18:** Update the GitHub repository, Readme file. Prepare the final report and presentation. 
->>>>>>> 872ade70ed578cfa30e85a488f398770b6c116f6
+
+**Methylcall data**
+- We use [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) to align the sequencing reads (fastq) and genreate methylation calls
+  - It would be useful to look at [Bismark paper](https://academic.oup.com/bioinformatics/article/27/11/1571/216956) and their [RRBS guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/RRBS_Guide.pdf)
+  - The authors of the errbs paper developed, [methylKit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3491415/), software for analyzing methyllation data
 
 **Find the datasets for each**
 - I have palaced some data here (you may wish to copy it somewhere local):
