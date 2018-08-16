@@ -1,7 +1,7 @@
 ## Purpose 
 The purpose of this project is to develop a software for the analysis of multiple DNA methylation files obtained from Next Generation Sequencing Technology by inputting, annotating and generating data. The software will be able to specify columns from DNA methylation files for data visualization, location of methylation sites and coverage. 
 
-### Background 
+## Background 
 DNA methylation is an epigenetic mechanism that is characterized by the addition of a methyl (CH3) group to the cytosine base of the DNA molecule. Methylation occurs at different regions in the genome in which the cytosine nucleotide base follows a guanine base or CpG dinucleotides.  CpG islands are regions of the DNA where the frequency of cytosine-guanine dinucleotide bases is higher compared to other regions. Methylation in these locations occur at the promoter region where transcription binding factor results in gene silencing and altered gene expression. Levels of methylation in the DNA are identified by methods such as Enhanced Reduced Representation Bisulfite Sequencing (ERRBS), Reduced Representation Bisulfite Sequencing (RRBS), Whole-Genome Bisulfite sequencing (WGBS) and Methylome capture. 
 In order to create software for DNA methylation comparisons, the following steps are required: 
 1.	Establish a concrete understanding of DNA methylation.  
@@ -15,7 +15,7 @@ My final presentation will have the following format: (1) Introduction to DNA me
 CpG islands and methods used for DNA methylation analysis. (2) Explain the difference in current methods and perform analysis on DNA methylation files using methylKit. (3) Describe the software that I have created, i.e. bash scripts, R. (4) Use of the scripts in programs such as R on various platforms, servers, etc. (5) Advantages or disadvantages of the script(s). (6) Skills or knowledge gained from the project/internship.  
 
 
-### ERRBS and RRBS libraries
+## ERRBS and RRBS libraries
 __Reduced representation bisulfite sequencing (RRBS):__ an efficient method for quantitative, base-pair resolution of cytosine methylation across the genome.
 
 __Protocol:__
@@ -31,7 +31,7 @@ The main difference between RRBS and ERRBS ibrary preparation protocols is the s
 RRBS only interrogates CpGs within short MspI delimited fragments between 40 to 220 bp, making it biased towards representing CpG islands, which typically contain more densely clustered MspI sites. In order to enhance the capture of regions beyond CpG islands, MspI fragments ranging from 70–320 bp are selected instead. This enhanced RRBS (ERRBS) method yielded a 75% increase in coverage of CpG sites with a 54% increase in coverage of CpG shores. 
 
 
-### Analysis 
+## Analysis 
 __Read in methylcall files:__
 
 ``` errbs <- read.table("/Methyl/File/Path.txt", header = TRUE) ```
