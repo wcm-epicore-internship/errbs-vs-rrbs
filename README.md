@@ -1,10 +1,19 @@
-# ERRBS-vs-RRBS
-A comparison of ERRBS methylation data with RRBS methylation data
+## Purpose 
+The purpose of this project is to develop a software for the analysis of multiple DNA methylation files obtained from Next Generation Sequencing Technology by inputting, annotating and generating data. The software will be able to specify columns from DNA methylation files for data visualization, location of methylation sites and coverage. 
 
 ### Background 
-__DNA methylation__ is an epigenetic mechanism in which methyl groups are added to the DNA molecule. Methylation can change the activity of a DNA segment without changing the sequence, playing a role in gene expression regulation. 
-__Bisulfite sequencing__ (also known as bisulphite sequencing) is the use of bisulfite treatment of DNA to determine its pattern of methylation. In animals it predominantly involves the addition of a methyl group to the carbon-5 position of cytosine residues of the dinucleotide CpG. 
-__Bisulfite sequencing__ applies routine sequencing methods on bisulfite-treated genomic DNA to determine methylation status at CpG dinucleotides. Treatment of DNA with bisulfite converts cytosine residues to uracil, but leaves 5-methylcytosine residues unaffected. Therefore DNA that has been treated with bisulfate retains only methylated cytosines thus yielding single-nucleotide resolution information about the methylation status of a segment of DNA. 
+DNA methylation is an epigenetic mechanism that is characterized by the addition of a methyl (CH3) group to the cytosine base of the DNA molecule. Methylation occurs at different regions in the genome in which the cytosine nucleotide base follows a guanine base or CpG dinucleotides.  CpG islands are regions of the DNA where the frequency of cytosine-guanine dinucleotide bases is higher compared to other regions. Methylation in these locations occur at the promoter region where transcription binding factor results in gene silencing and altered gene expression. Levels of methylation in the DNA are identified by methods such as Enhanced Reduced Representation Bisulfite Sequencing (ERRBS), Reduced Representation Bisulfite Sequencing (RRBS), Whole-Genome Bisulfite sequencing (WGBS) and Methylome capture. 
+In order to create software for DNA methylation comparisons, the following steps are required: 
+1.	Establish a concrete understanding of DNA methylation.  
+2.	Learn and compare the different methods used to analyze DNA methylation. 
+3.	Using R, analyze the DNA methylation files obtained from Pubshare database using Bioconductor and R packages such as methylKit. 
+4.	 Create scripts necessary that can read DNA methylation files, filter and reformat the data, compute statistics, plot the coverage of CpG and determine methylation levels for multiple datasets. 
+
+## Description of Project
+The methylome of an organism’s genome can be obtained using different protocols which can then be sequenced and aligned to produce methylation files. The file contains information at base resolution where DNA methylation has occurred including chromosome base, strand, coverage and the frequency of methylation or unmethylation. To analyze DNA methylation files, the current methods do not allow annotation of multiple files simultaneously. In order to build the software, I will use the instructions available on the GitHub repository which contains a schedule and a Readme file. I will update the Readme file to include information about the current  methods, the software and codes used to analyze the files.  The software will use data from Pubshare database to perform analysis using R packages such as methylKit by gathering more advanced knowledge in programming and understanding the software that are already available. I will run script in R to validate its accuracy and consistency.
+My final presentation will have the following format: (1) Introduction to DNA methylation, 
+CpG islands and methods used for DNA methylation analysis. (2) Explain the difference in current methods and perform analysis on DNA methylation files using methylKit. (3) Describe the software that I have created, i.e. bash scripts, R. (4) Use of the scripts in programs such as R on various platforms, servers, etc. (5) Advantages or disadvantages of the script(s). (6) Skills or knowledge gained from the project/internship.  
+
 
 ### ERRBS and RRBS libraries
 __Reduced representation bisulfite sequencing (RRBS):__ an efficient method for quantitative, base-pair resolution of cytosine methylation across the genome.
