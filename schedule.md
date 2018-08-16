@@ -1,6 +1,6 @@
 # Schedule
 
-**Week 1 - Week 3:** Read background articles on DNA methylation, CpG islands and methylation library protocols such as ERRBS, RRBS, WGBS and Methylome capture. 
+**Week 1 - Week 3:** Read background articles on DNA methylation, CpG islands and methylation library protocols such as ERRBS, RRBS, WGBS and Methylome capture.
 
 **Week 4 – Week 6:** Compare methylation library protocols. What's the difference in the library preparation protocols?
 - The [ERRBS paper](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1002781)
@@ -12,14 +12,16 @@
   - It would be useful to look at [Bismark paper](https://academic.oup.com/bioinformatics/article/27/11/1571/216956) and their [RRBS guide](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/RRBS_Guide.pdf)
   - The authors of the errbs paper developed, [methylKit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3491415/), software for analyzing methyllation data
 
-**Week 10 - Week 15:** Create bash scripts that can perform numerous analysis on the DNA methylation files including coverage, filtering, identifying the methylated value of cytosine or CpG islands and compute statistics. 
-Week 16 - Week 18: Update the GitHub repository, Readme file. Prepare the final report and presentation. 
+**Week 10 - Week 15:** Create bash scripts that can perform numerous analysis on the DNA methylation files including coverage, filtering, identifying the methylated value of cytosine or CpG islands and compute statistics.
+Week 16 - Week 18: Update the GitHub repository, Readme file. Prepare the final report and presentation.
 
 **Find the datasets for each**
+- I have palaced some data here (you may wish to copy it somewhere local):
+  - /athena/epicore/users/scratch/thk2008/methyl_seq_comparison_data/wcm-epicore-internship
 - in R or Python
   - read in methylcall files
   - plot methylation values
   - compare site calls
     - how many sites
     - how many common
-  
+
