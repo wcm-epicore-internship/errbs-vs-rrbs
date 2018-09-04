@@ -16,7 +16,6 @@ methylcaptureC <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_E
 
 #MULTIPLE FILES - save the strings into a list
 library(methylKit)
-library(GenomicRanges)
 file.list=list(ERRBS, RRBS, WGBS, methylcaptureA, methylcaptureB, methylcaptureC)
 file.list
 
@@ -35,7 +34,7 @@ myobj=methRead(file.list,
                dbdir = "methylDB"
 )
 
-#creates a path to the folder methylDB -- review
+#creates a path to the folder methylDB -- compressed and indexed files   
 print(myobj[[1]]@dbpath) #need to run the dbtype = "tabix", command to get result
 
 #for loop to count the number of rows in the files
@@ -65,7 +64,6 @@ head(filter_myobj, n=20)
 #Common sites
 
 #using the granges package for looking at overlaps (common sites). methyl objects can be converted to granges (see FAQ for methylkit in the manual).#
-
 #find the common sites for ERRBS, RRBS, WGBS, methylcaptureA, methylcaptureB, methylcaptureC
 #have to use read.table instead of methRead due to output format
 #methRead doesn't include the chr$base which is needed to find the common sites
