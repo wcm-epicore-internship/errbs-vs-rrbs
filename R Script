@@ -1,5 +1,5 @@
 ``` 
-#Input six methylation data files from epicore/pascal/homedirectory
+#Input six methylation data files from Epicore server to the local directory
 
 ERRBS <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/ERRBS.mincov0.txt.gz" #ERRBS file with 1 coverage
 
