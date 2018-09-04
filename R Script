@@ -1,0 +1,111 @@
+``` 
+#Input six methylation data files from epicore/pascal/homedirectory
+
+ERRBS <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/ERRBS.mincov0.txt.gz" #ERRBS file with 1 coverage
+
+RRBS <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/RRBS.mincov0.txt.gz" #RRBS file with 1 coverage
+
+WGBS <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/WGBS.mincov0.txt.gz" #WGBS file with 1 coverage
+
+methylcaptureA <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/methylcaptureA.mincov0.txt.gz" #methylcaptureA file with 1 coverage
+
+methylcaptureB <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/methylcaptureB.mincov0.txt.gz" #methylcaptureB file with 1 coverage
+
+methylcaptureC <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore/methylcaptureC.mincov0.txt.gz" #methylcaptureC file with 1 coverage
+
+
+#MULTIPLE FILES - save the strings into a list
+library(methylKit)
+library(GenomicRanges)
+file.list=list(ERRBS, RRBS, WGBS, methylcaptureA, methylcaptureB, methylcaptureC)
+file.list
+
+#Think about more compact methods of reading in files
+#example:
+#file.list=as.list(list.files(pattern=‘cpg.*.mincov10.txt’))
+
+#methread for MULTIPLE FILES - save strings into an object/variable
+#read the files to a methylRawListDB object: myobjDB and save in databases in folder methylDB
+myobj=methRead(file.list,
+               sample.id=list("ERRBS","RRBS", "WGBS", "methylcaptureA", "methylcaptureB", "methylcaptureC"),
+               assembly="hg18",
+               treatment=c(1,1,1,0,0,0),
+               context="CpG",
+               #dbtype = "tabix", --> this command compresses the file and prevents it from being viewed myobj[[1]]
+               dbdir = "methylDB"
+)
+
+#creates a path to the folder methylDB -- review
+print(myobj[[1]]@dbpath) #need to run the dbtype = "tabix", command to get result
+
+#for loop to count the number of rows in the files
+for (i in 1:length(file.list)) {
+  print(file.list[[i]])
+  print(nrow(myobj[[i]]))
+}
+
+#descriptive statistics on the ERRBS, RRBS, WGBS, methylcaptureA, methylcaptureB, methylcaptureC
+#Option2
+for (i in 1:length(file.list)) {
+  print(file.list[[i]])
+  getMethylationStats(myobj[[i]])
+}
+
+#Create a histogram with the percentage of CpG for each dataset
+for (i in 1:length(file.list)) {
+  print(file.list[[i]])
+  getCoverageStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
+}
+
+#filtering the data by coverage
+filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
+                                hi.count=NULL,hi.perc=99.9)
+head(filter_myobj, n=20)
+
+#Common sites
+
+#using the granges package for looking at overlaps (common sites). methyl objects can be converted to granges (see FAQ for methylkit in the manual).#
+
+#find the common sites for ERRBS, RRBS, WGBS, methylcaptureA, methylcaptureB, methylcaptureC
+#have to use read.table instead of methRead due to output format
+#methRead doesn't include the chr$base which is needed to find the common sites
+browser()
+for (i in 1:length(file.list)) {
+    methylRead=list(read.table(file.list[[i]]))
+    
+}
+
+#attempt 2
+
+for (i in 1:length(file.list)) {
+    x <- (read.table(file.list[[i]]))
+    list.append(methyldata.list, x)
+}
+
+#Attempt 3 --modify didn't work, append?
+
+for (i in 1:length(file.list)) {
+    x <- (read.table(file.list[[i]]))
+    methyldata.list <- list()
+    methyldata.list <- append(methyldata.list, x)
+}
+
+#Merging sample to find common sites
+#"Setting destrand=TRUE (the default is FALSE) will merge reads on both strands of a CpG dinucleotide.
+#This provides better coverage, but only advised when looking at CpG methylation (for CpH methylation this will cause wrong results in subsequent analyses).
+#In addition, setting destrand=TRUE will only work when operating on base-pair resolution, otherwise setting this option TRUE will have no effect.
+#The unite() function will return a methylBase object which will be our main object for all comparative analysis.
+#The methylBase object contains methylation information for regions/bases that are covered in all samples."
+
+meth=unite(myobj, destrand=FALSE)
+head(meth) #view the file meth
+
+# creates a methylBase object where only CpGs covered with at least 1 sample per group will be returned
+# there were two groups defined by the treatment vector, 
+meth.min=unite(myobj,min.per.group=1L)
+head(meth.min)
+
+#correlation 
+getCorrelation(meth,plot=TRUE)
+```
+
