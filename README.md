@@ -10,7 +10,7 @@ In order to create a software and scripts to distinguish the variation in the DN
 The methylome of an organism’s genome can be obtained using different protocols which can then be sequenced and aligned to produce methylation files. The file contains information at base resolution where DNA methylation has occurred including chromosome base, strand, coverage and the frequency of methylation or unmethylation. To build a software that compares DNA methylation protocols, I will use the instructions available on the GitHub repository which contains 
 
 a schedule and a Readme file. I will update the Readme file to include information about the different protocols, the software and codes used to analyze the data. The software will use data from the Epicore Server to perform analysis using R packages such as MethylKitand GenomicRanges. MethylKit is a multi-threaded R package used to rapidly analyze and characterize
-I will run the scripts in R Studio to validate the accuracy and consistency of the ERRBS method coverage.
+data from many methylation experiments at once (Akalin, 2012). I will run the scripts in R Studio to validate the accuracy and consistency of the ERRBS method coverage.
 My final presentation will have the following format: (1) Introduction to DNA methylation, CpG islands and methods used for DNA methylation analysis. (2) Explain the difference in protocols and perform analysis using R packages such as methylKit and GenomicRanges. (3) Describe the software or scripts that I have created. (4) Use the scripts in R Studio and various platforms, servers, etc. (5) Explain the advantages or disadvantages of the script and ERRBS method. (6) Skills or knowledge gained from the project/internship.
 
 
