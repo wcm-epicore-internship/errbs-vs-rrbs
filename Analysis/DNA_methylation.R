@@ -53,6 +53,14 @@ for (i in 1:length(file.names.list)) {
     getMethylationStats(myobj[[i]])
 }
 
+#percent methylation distribution
+
+for (i in 1:length(file.names.list)) {
+    print(basename(file.names.list[[i]]))
+    getMethylationStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
+    
+}
+
 #Create a histogram with the percentage of CpG for each dataset
 for (i in 1:length(file.names.list)) {
     print(basename(file.names.list[[i]]))
