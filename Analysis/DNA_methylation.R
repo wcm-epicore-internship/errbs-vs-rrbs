@@ -20,22 +20,31 @@ dbdir = "methylDB"
 #creates a path to the folder methylDB -- compressed and indexed files
 print(myobj[[1]]@dbpath) #need to run the dbtype = "tabix", command to get result
 
-#for loop to count the number of rows in the files - function for nrow, statistics and coverage. 
-loop <- function() {
-  for (i in 1:length(file.names.list)) 
-  print(nrow(myobj[[i]]))
-}
-
-head(loop)
-
-for (i in 1:length(file.names.list)) {
-    print(nrow(myobj[[i]]))
-}
 
 #Output the file names and nrows for each sample  
 samples <- sapply(myobj,nrow) 
 names(samples) <- c("ERRBS", "methylcaptureA", "methylcaptureB", "methylcaptureC", "RRBS", "WGBS")
 file.list <- as.list(samples)
+file.list
+
+
+#using a function to find nrow, statistics and histogram (condense code)
+methylation <- function(myobj, files.names.lists) {
+  
+  for (i in 1:length(file.names.list)) {
+    print(basename(file.names.list[[i]]))
+    print(nrow(myobj[[i]]))
+    getMethylationStats(myobj[[i]])
+    getCoverageStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
+    
+  }
+   
+}
+
+#obtaining nrow using loop
+for (i in 1:length(file.names.list)) {
+    print(nrow(myobj[[i]]))
+}
 
 #descriptive statistics on the ERRBS, RRBS, WGBS, methylcaptureA, methylcaptureB, methylcaptureC
 #Option2
@@ -50,14 +59,6 @@ for (i in 1:length(file.names.list)) {
     getCoverageStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
 }
 
-#barplot to graph the files
-#plot the data that's in my obj or samples
-barplot(table(samples),  #how to add names of files ERRBS,etc
-        main="DNA Methylation files",
-        xlab="",
-        ylab="",
-        col="red"
-)
 
 #plot the samples
 plot(samples,
