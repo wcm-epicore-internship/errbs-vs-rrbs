@@ -92,3 +92,5 @@ head(meth.min)
 
 #correlation
 getCorrelation(meth,plot=TRUE)
+
+#newdata
