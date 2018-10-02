@@ -30,15 +30,15 @@ file.list
 
 #using a function to find nrow, statistics and histogram (condense code)
 methylation <- function(myobj, files.names.lists) {
-  
-  for (i in 1:length(file.names.list)) {
-    print(basename(file.names.list[[i]]))
-    print(nrow(myobj[[i]]))
-    getMethylationStats(myobj[[i]])
-    getCoverageStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
     
-  }
-   
+    for (i in 1:length(file.names.list)) {
+        print(basename(file.names.list[[i]]))
+        print(nrow(myobj[[i]]))
+        getMethylationStats(myobj[[i]])
+        getMethylationStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
+        getCoverageStats(myobj[[i]],plot=TRUE,both.strands=FALSE)
+        
+    }
 }
 
 #obtaining nrow using loop
