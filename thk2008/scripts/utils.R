@@ -31,7 +31,8 @@ getCpgGr <- function(mcfile) {
   header <- FALSE
   if ('chrBase' %in% cpg.frame) { header <- TRUE }
   # read file
-  cpg.frame <- read.table(mcfile[[1]], header=header, nrows=sample(1000:10000,1))
+  # cpg.frame <- read.table(mcfile[[1]], header=header, nrows=sample(1000:10000,1))
+  cpg.frame <- read.table(mcfile[[1]], header=header)
   tmp <- rep("+", nrow(cpg.frame))
   tmp[cpg.frame[,4] == "R"] <- "-"
   cpg.frame[,4] <- as.factor(tmp)
