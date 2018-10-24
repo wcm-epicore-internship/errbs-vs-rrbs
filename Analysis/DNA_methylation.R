@@ -93,7 +93,8 @@ clusterSamples(meth, dist="correlation", method="ward", plot=TRUE)
 PCASamples(meth, screeplot=TRUE)
 PCASamples(meth)
 
-#Using genomicRanges - needs more work
+#Using genomicRanges - still working on this
+getCpG <- function() 
 gr=GRanges(seqnames=c("Chr1")),
 ranges=IRanges(start=c(50,150,200), end = c(100,200,300)),
 strand=c("+", "-")
