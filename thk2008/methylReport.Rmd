@@ -1,0 +1,74 @@
+---
+title: "methylationReport"
+author: "thk2008"
+date: "October 24, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(methylKit)
+library(GenomicRanges)
+source("scripts/utils.R")
+
+```
+
+## Purpose
+
+The purpose of this project is to develop a software for the analysis of multiple DNA methylation data obtained from Next Generation Sequencing Technology by inputting, annotating and generating data. The software will be able to evaluate DNA methylation data for visualization, location of methylation sites and coverage.
+
+## Background
+
+maybe put proposal in here and modify it as we learn stuff
+
+<!-- load data -->
+```{r echo=FALSE}
+# for now we are going to assume it's there
+# and load it
+load("rdata/myobj.rda")
+
+```
+
+## Coverage
+- what is important about coverage?
+- what are we looking for?
+- what do we see?
+- what are our conclusions?
+
+```{r echo=FALSE}
+
+coverage_vals <- lapply(myobj, function(i){ x <- getData(i)$coverage })
+names(coverage_vals) <- getSampleID(myobj)
+
+# maybe want to filter for coverage values that make sense
+filt_coverage_vals <- lapply(coverage_vals, function(i){
+  x <- i[i >= 10 & i <= 500]
+})
+# do we need to see the outliers? are they important?
+boxplot(filt_coverage_vals, outline=F,
+  main="needs a title and labels", xlab="fix axes labels")
+
+# maybe this is a better way to visualize it
+library(vioplot) # move this up top
+orig_margins <- par()$mar
+par(mar=c(7.1,4.1,4.1,2.1))
+plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="all graphs must have titles and labels", xlab="",ylab="")
+for (i in 1:length(filt_coverage_vals)) {
+  vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T)
+}
+axis(2)
+axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
+
+```
+
+## Methylation levels
+
+
+## add other observations, hypotheses, explanations, and plots...
+
+
+## Conclusions
+- add conclusions

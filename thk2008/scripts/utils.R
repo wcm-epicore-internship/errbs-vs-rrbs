@@ -66,7 +66,7 @@ plotNumberOfCpGs <- function(x) {
 }
 
 
-
+if(F) {
 # some stuff for dealing with myobj
 coverage_vals <- lapply(myobj, function(i){ x <- getData(i)$coverage })
 names(coverage_vals) <- getSampleID(myobj)
@@ -109,5 +109,5 @@ plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="all graphs must ha
 for (i in 1:length(coverage_vals)){ lines(density(coverage_vals[[i]], bw=0.1)) }
 axis(2)
 axis(1)
-
+}
 
