@@ -65,7 +65,13 @@ axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
 ```
 
 ## Methylation levels
+- i like methylation, it tastes yummy.
 
+```{r}
+
+getMethylationStats(myobj[[1]], plot=T)
+
+```
 
 ## add other observations, hypotheses, explanations, and plots...
 
