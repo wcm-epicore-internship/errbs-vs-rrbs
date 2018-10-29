@@ -1,11 +1,11 @@
 #R packages
 library(methylKit)
 library(GenomicRanges)
-install.packages("vioplot")
+library(knitr)
 library(vioplot)
+install.packages("vioplot")
 
-#read in files
-#path file in variable data.file.path
+#read in files - path file stored in variable data.file.path
 data.file.path <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore"
 data <- data.file.path
 file.names.list <- list.files(path = data, pattern = "*.mincov0.txt.gz", full.names = TRUE)
@@ -15,37 +15,28 @@ file.names.list
 setwd("~/Desktop/Internship_notes/MethylCall_Data_Plots")
 getwd()
 
+#methread for Multiple Files - load myobj.rda that is already created
+load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/myobj.rda")
 
-#Explain
-#rda <- paste(rdataDir, "mcgrlist.rda", sep="/")
-#cat("saving mcgrlist to [", rda, "]\n")
-#save(mcgrlist, file=rda)
-#but then you will have to load it
-
-#if myobj.rda is saved it gives this error
-#Did not find myobj Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
-#In addition: Warning message:
-#In readChar(con, 5L, useBytes = TRUE) : cannot open compressed file 'myobj.rda ',probable reason 'No such file or directory'
-#does not let me keep on working
-
+#if not myobj will be created
 if  (!exists("myobj")) {
     cat("Did not find myobj\n")
     if(file.exists("myobj.rda")) {
-        cat("myobj.rda loaded")
-        load("myobj.rda\n")
-       } else {
-            cat("creating and saving myobj\n")
-            myobj=methRead(as.list(file.names.list),
-            sample.id=as.list(gsub(".mincov0.txt.gz", "", basename(file.names.list))), #gsub finds all the files that end in ("*.mincov0.txt.gz"), Basename removes the ending of the file.
-            assembly="hg19",
-            treatment=rep(0,6), #rep function - 0 = same , 6 = number of items in the file.names.list
-            context="CpG",
-            dbdir = "methylDB"
-            )
-            save(myobj,file = "myobj.rda")
-            cat ("myobj saved \n")
-        }
+        cat("myobj.rda loading\n")
+        load("myobj.rda")
+    } else {
+        cat("creating and saving myobj\n")
+        myobj=methRead(as.list(file.names.list),
+        sample.id=as.list(gsub(".mincov0.txt.gz", "", basename(file.names.list))), #gsub finds all the files that end in ("*.mincov0.txt.gz"), Basename removes the ending of the file.
+        assembly="hg19",
+        treatment=rep(0,6), #rep function - 0 = same , 6 = number of items in the file.names.list
+        context="CpG",
+        dbdir = "methylDB"
+        )
+        save(myobj,file = "myobj.rda")
+        cat ("myobj saved \n")
     }
+}
 
 #Methylation function:Counts the number of rows, descriptive statistics, percent methylation distribution, histogram with the percentage of CpG for each dataset.
 methylation <- function(myobj) {
@@ -70,12 +61,12 @@ names(samples) <- getSampleID(myobj)
 file.list <- as.list(samples)
 file.list
 
-#filter the data by read coverage to avoid bias (obtain coverage that is not too high or too low)
+#filtering the data by read coverage to avoid bias (obtain coverage that is not too high or too low)
 filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
 hi.count=NULL,hi.perc=99.9)
 head(filter_myobj, n=20)
 
-#Merging sample to find bases covered in samples 
+#Merging sample to find bases covered in samples
 meth=unite(myobj, destrand=FALSE)
 head(meth) #view the file meth
 
@@ -83,35 +74,35 @@ head(meth) #view the file meth
 meth.min=unite(myobj,min.per.group=1L)
 head(meth.min)
 
-#find the correlation of all samples
+#correlation
 getCorrelation(meth,plot=TRUE)
 
-#Cluster the samples to find similarity in methods
+#Cluster the samples to find similarity in method
 clusterSamples(meth, dist="correlation", method="ward", plot=TRUE)
 
-#Principal component analysis - brings out variation and strong pattern in sample (helps to visualize/explore) 
+#Principal component analysis - brings out variation and strong pattern in sample (helps to visualize/explore)
 PCASamples(meth, screeplot=TRUE)
-PCASamples(meth)
+PCASamples(meth) #is this important
 
-#Using genomicRanges - still working on this
-getCpG <- function() 
-gr=GRanges(seqnames=c("Chr1")),
-ranges=IRanges(start=c(50,150,200), end = c(100,200,300)),
-strand=c("+", "-")
-
-#barplot of all samples - #? pdf isn't opening
-barplot(samples)
+#plots and graphs - 1) barplot of all samples
+barplot(samples,
+main="Analysis",
+xlab="Methylation Method",
+ylab="Frequency",
+col= "blue")
 dev.new()
 pdf(paste(barplot(samples), "barplot_samples.pdf", sep = "_"))
 #dev.off()
 
-#plot the samples
+# 2) plot the samples
 plot(samples,
-main = "DNA methylation Samples",
-xlab = "" , #trying to label 1,2,3,4,5, with sample.id names
+main="Analysis",
+main = "",
+xlab = "" ,
 ylab = "frequency",
 type = "o", #plot type
 col = "red") #plot color
+axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2) #changes the labels 1,2,3,4,5 with sample.id names (works with this line of code)
 dev.new()
 pdf(paste(plot(samples), "plot_samples.pdf", sep = "_"))
 #dev.off()
@@ -121,89 +112,99 @@ coverage_vals <- lapply(myobj, function(i){
   x <- getData(i)$coverage
 })
 names(coverage_vals) <- getSampleID(myobj)
-names(coverage_vals) 
+names(coverage_vals)
 
-#using plots to analyze the data
-#filter coverage values ?
+#boxplot of samples
 filt_coverage_vals <- lapply(coverage_vals, function(i){
-       x <- i[i >= 10 & i <= 500]
-   })
-boxplot(filt_coverage_vals)
- 
-
-install.packages("vioplot")
-library(vioplot)
-orig_margins <- par()$mar
-par(mar=c(7.1,4.1,4.1,2.1))
-plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="DNA Methylation Samples", xlab="",ylab="")
-for (i in 1:length(filt_coverage_vals)){ vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T) }
-axis(2)
-axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
-
-par(mfrow=c(3,2))
-for (i in 1:length(filt_coverage_vals)){ plot(density(filt_coverage_vals[[i]], bw=0.1)) }
-
-par(mfrow=c(3,2))
-for (i in 1:length(filt_coverage_vals)){ plot(density(filt_coverage_vals[[i]], bw=0.1)) }
-pdf(paste(names(coverage_vals) ,"plot1_output.pdf",sep="_"))
-dev.off()
-
-par(mfrow=c(1,1))
-plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="DNA Methylatin analysis", xlab="",ylab="")
-for (i in 1:length(filt_coverage_vals)){ lines(density(filt_coverage_vals[[i]], bw=0.1)) }
-axis(1)
-axis(2)
-
-par(mfrow=c(3,2))
-for (i in 1:length(coverage_vals)){ plot(density(coverage_vals[[i]], bw=0.1)) }
-axis(1)
-axis(2)
-
-par(mfrow=c(1,1))
-plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="", xlab="",ylab="")
-for (i in 1:length(coverage_vals)){ lines(density(coverage_vals[[i]], bw=0.1)) }
-axis(2)
-axis(1)
-
-
-#function for graphs 
-install.packages("vioplot")
-library(vioplot)
-filt_coverage_vals <- lapply(coverage_vals, function(i){
-  x <- i[i >= 10 & i <= 500]
+    x <- i[i >= 10 & i <= 500]
 })
 boxplot(filt_coverage_vals)
-library(vioplot) #package 
 
-plots <- function(filt_coverage_vals, myobj) { 
- 
-  for (i in 1:length(filt_coverage_vals, bw=0.1))  {
-  
-  par(mar=c(7.1,4.1,4.1,2.1))
-  plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="DNA Methylation Samples", xlab="",ylab="")
-  #for (i in 1:length(filt_coverage_vals)){ vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T) }
-  axis(2)
-  axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
+#function for graphs
+plots <- function(filt_coverage_vals) {
     
-  par(mfrow=c(3,2)) 
-  plot(density(filt_coverage_vals[[i]], bw=0.1)) 
-  pdf(paste(sample.output,"plot.pdf",sep="_")) #send the location setwd()
-  plot(density(coverage_vals[[i]], bw=0.1))
-  axis(1)
-  axis(2)
-  pdf(paste(sample.output,"lines.pdf",sep="_"))
+  for (i in 1:length(filt_coverage_vals))  {
+        
+        orig_margins <- par()$mar
+        par(mar=c(7.1,4.1,4.1,2.1))
+        plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="Methylation analysis", xlab="Method",ylab="Coverage")
+        for (i in 1:length(filt_coverage_vals)){ vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T) }
+        axis(2)
+        axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
+        
+        par(mfrow=c(1,1))
+        plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="DNA Methylation analysis", xlab="",ylab="")
+        for (i in 1:length(filt_coverage_vals)){ lines(density(filt_coverage_vals[[i]], bw=0.1)) }
+        axis(1)
+        axis(2)
+        
+        par(mfrow=c(1,1))
+        plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="", xlab="",ylab="")
+        for (i in 1:length(coverage_vals)){ lines(density(coverage_vals[[i]], bw=0.1)) }
+        axis(2)
+        axis(1)
+        
+        par(mfrow=c(3,2))
+        for (i in 1:length(filt_coverage_vals)){ plot(density(filt_coverage_vals[[i]], bw=0.1)) }
+        pdf(paste(names(coverage_vals) ,"plot1_output.pdf",sep="_"))
+        dev.off()
+        
+        break
+  }}
+#execute the function
+plots(filt_coverage_vals)
 
-  par(mfrow=c(1,1))
-  plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="insert title", xlab="",ylab="")
-  lines(density(coverage_vals[[i]], bw=0.1)) 
-  axis(2)
-  axis(1)
-  
-  plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="insert title", xlab="",ylab="")
-  lines(density(filt_coverage_vals[[i]], bw=0.1)) 
-  axis(1)
-  axis(2)
+#find the bandwidth for each sample - highest bw = 3.63, lowest bw = 0.1786
+plot(density(filt_coverage_vals[[i]])) #N= 12646218, Bandwidth=0.1786
+plot(density(filt_coverage_vals[[1]])) #N= 6693861,  Bandwidth=2.488
+plot(density(filt_coverage_vals[[2]])) #N= 3819823,  Bandwidth=3.63
+plot(density(filt_coverage_vals[[3]])) #N= 6001227,  Bandwidth=1.806
+plot(density(filt_coverage_vals[[4]])) #N= 4028562,  Bandwidth=1.379
+plot(density(filt_coverage_vals[[5]])) #N= 5336906,  Bandwidth=0.5154
+plot(density(filt_coverage_vals[[6]])) #N= 12646218, Bandwidth=0.1786
 
-  }
-} 
 
+#loop for plot(density(filter_coverage_values)) showing bw measures
+for (i in 1:length(filt_coverage_vals))  {
+    filt_coverage_vals <- lapply(coverage_vals, function(i){
+        x <- i[i >= 10 & i <= 500]
+    })
+    plot(density(filt_coverage_vals[[i]]))
+    
+}
+
+x <- myobj[[1]]$numCs / myobj[[1]]$coverage *100
+hist(x,
+main="Number of Cs vs Coverage %",
+xlab="Coverage",
+ylab="NumCs",
+col= "red")
+
+x <- myobj[[i]]$numCs / myobj[[i]]$coverage *100
+plot(x,
+main="Number of Cs vs Coverage %",
+xlab="Coverage",
+ylab="NumCs",
+col= "yellow")
+
+#library(BSgenome.Hsapiens.UCSC.hg19)
+#Using genomicRanges
+gr=GRanges(seqnames=c("Chr1"),
+ranges=IRanges(start=c(50,150,200), end = c(100,200,300)), #ranges contain the start and end position of the genome
+strand=c("+", "-","-"))
+
+gr[1,]
+seqnames(gr)
+mcols(gr)
+
+#need help
+cgr <- GRanges(seqnames=myobj$chr[,2],
+ranges=IRanges(myobj$start[,3],end=myobj$end[,3]),
+strand=myobj$strand[,4],
+coverage=myobj$coverage[,5],
+numC=myobj$numCs[,6],
+numT=myobj$numTs[,7])
+
+chr.len      <- seqlengths(Hsapiens)
+seqinfo(cgr) <- seqinfo(Hsapiens)[names(seqlengths(cgr))]
+cgr
