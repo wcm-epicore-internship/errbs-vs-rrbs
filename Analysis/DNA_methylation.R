@@ -175,16 +175,16 @@ for (i in 1:length(filt_coverage_vals))  {
 
 x <- myobj[[1]]$numCs / myobj[[1]]$coverage *100
 hist(x,
-main="Number of Cs vs Coverage %",
-xlab="Coverage",
-ylab="NumCs",
+main="Number of Cs",
+xlab="% methylation per base",
+ylab="Frequency",
 col= "red")
 
 x <- myobj[[i]]$numCs / myobj[[i]]$coverage *100
 plot(x,
-main="Number of Cs vs Coverage %",
-xlab="Coverage",
-ylab="NumCs",
+main="Number of Cs",
+xlab="% methylation per base",
+ylab="Frequency",
 col= "yellow")
 
 #library(BSgenome.Hsapiens.UCSC.hg19)
