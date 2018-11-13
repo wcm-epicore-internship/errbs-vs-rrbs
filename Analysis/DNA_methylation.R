@@ -3,7 +3,6 @@ library(methylKit)
 library(GenomicRanges)
 library(knitr)
 library(vioplot)
-install.packages("vioplot")
 
 #read in files - path file stored in variable data.file.path
 data.file.path <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore"
@@ -55,6 +54,7 @@ methylation <- function(myobj) {
 #to execute function
 methylation(myobj)
 
+
 #Output number of rows for each sample
 samples <- sapply(myobj,nrow)
 names(samples) <- getSampleID(myobj)
@@ -73,6 +73,22 @@ head(meth) #view the file meth
 #creates a methylBase object where only CpGs covered with at least 1 sample per group will be returned
 meth.min=unite(myobj,min.per.group=1L)
 head(meth.min)
+
+
+#getMethylationStats doesn't give enough information to plot nor extract sample
+#meth and percentMethylationStat extra data
+x <- meth #rda save
+perc.meth=percMethylation(x)
+
+hist(perc.meth)
+
+dens <- apply(perc.meth, 2, density)
+
+plot(NA, xlim=range(sapply(dens, "[", "x")), ylim=range(sapply(dens, "[", "y")))
+mapply(lines, dens, col=1:length(dens))
+
+legend("topright", legend=names(dens), fill=1:length(dens))
+
 
 #correlation
 getCorrelation(meth,plot=TRUE)
@@ -123,34 +139,54 @@ boxplot(filt_coverage_vals)
 #function for graphs
 plots <- function(filt_coverage_vals) {
     
-  for (i in 1:length(filt_coverage_vals))  {
+    for (i in 1:length(filt_coverage_vals))  {
         
         orig_margins <- par()$mar
+        cl <- rainbow(6)
         par(mar=c(7.1,4.1,4.1,2.1))
         plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="Methylation analysis", xlab="Method",ylab="Coverage")
-        for (i in 1:length(filt_coverage_vals)){ vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T) }
+        for (i in 1:length(filt_coverage_vals)){ vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T, col=cl[i]) }
         axis(2)
         axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
         
-        par(mfrow=c(1,1))
-        plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="DNA Methylation analysis", xlab="",ylab="")
-        for (i in 1:length(filt_coverage_vals)){ lines(density(filt_coverage_vals[[i]], bw=0.1)) }
-        axis(1)
-        axis(2)
+        plot(0, type="n", xlim=c(0,7), ylim=c(1,3), axes=F, main="all graphs must have labels", xlab="",ylab="")
+        for (i in 1:length(filt_coverage_vals)){ vioplot(log10(filt_coverage_vals[[i]]), h=0.1, at=i, add=T, col=cl[i]) }
         
-        par(mfrow=c(1,1))
-        plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="", xlab="",ylab="")
-        for (i in 1:length(coverage_vals)){ lines(density(coverage_vals[[i]], bw=0.1)) }
-        axis(2)
-        axis(1)
         
         par(mfrow=c(3,2))
-        for (i in 1:length(filt_coverage_vals)){ plot(density(filt_coverage_vals[[i]], bw=0.1)) }
-        pdf(paste(names(coverage_vals) ,"plot1_output.pdf",sep="_"))
-        dev.off()
+        cl <- rainbow(6)
+        for (i in 1:length(filt_coverage_vals)){ plot(density(filt_coverage_vals[[i]], bw=0.1), col=cl[i]) }
+        
+        par(mfrow=c(1,1))
+        cl <- rainbow(6)
+        plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="", xlab="",ylab="")
+        title(main = "Methylation Coverage", sub = "Coverage (0-500)", xlab = NULL, ylab = "C methylated",
+        line = NA, outer = FALSE, legend("topright", legend=names(coverage_vals), fill=cl))
+        for (i in 1:length(filt_coverage_vals)){ lines(density(filt_coverage_vals[[i]],bw=0.1), col=cl[i]) }
+        axis(1)
+        axis(2)
+        
+        
+        par(mfrow=c(3,2))
+        cl <- rainbow(6)
+        for (i in 1:length(coverage_vals)){ plot(density(coverage_vals[[i]], bw=0.1), col=cl[i]) }
+        axis(1)
+        axis(2)
+        
+        
+        par(mfrow=c(1,1))
+        cl <- rainbow(6)
+        plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="", xlab="",ylab="")
+        title(main = "Methylation Coverage", sub = "Coverage (0-500)", xlab = NULL, ylab = "C methylated",
+        line = NA, outer = FALSE, legend("topright", legend=names(coverage_vals), fill=cl))
+        for (i in 1:length(coverage_vals)) {lines(density(coverage_vals[[i]],bw=0.1), col=cl[i]) }
+        axis(2)
+        axis(1)
+        
         
         break
-  }}
+    }}
+
 #execute the function
 plots(filt_coverage_vals)
 
