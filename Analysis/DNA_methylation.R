@@ -70,6 +70,25 @@ head(filter_myobj, n=20)
 meth=unite(myobj, destrand=FALSE)
 head(meth) #view the file meth
 
+#save meth file so that it doesn't have to be created
+if  (!exists("meth.rda")) {
+    cat("Did not find meth.myobj\n")
+    if(file.exists("meth.rda")) {
+        cat("meth.rda loading\n")
+        load("meth.rda")
+    } else {
+        cat("creating and saving meth.rda\n")
+        meth.rda = filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
+        hi.count=NULL,hi.perc=99.9)
+        meth=unite(myobj, destrand=FALSE)
+        save(myobj,file = "meth.rda")
+        cat ("meth.rda saved \n")
+    }
+}
+
+#load meth.rdathat is already created
+load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/meth.rda")
+
 #creates a methylBase object where only CpGs covered with at least 1 sample per group will be returned
 meth.min=unite(myobj,min.per.group=1L)
 head(meth.min)
@@ -79,26 +98,31 @@ head(meth.min)
 #meth and percentMethylationStat extra data
 x <- meth #rda save
 perc.meth=percMethylation(x)
-
 hist(perc.meth)
 
 dens <- apply(perc.meth, 2, density)
-
 plot(NA, xlim=range(sapply(dens, "[", "x")), ylim=range(sapply(dens, "[", "y")))
 mapply(lines, dens, col=1:length(dens))
-
 legend("topright", legend=names(dens), fill=1:length(dens))
 
+#for loop and function to obtain correlation and Cluster Samples
+Analysis <- function(meth) {
+    
+    for (i in 1:length(meth)) {
+        getCorrelation(meth,plot=TRUE)
+        clusterSamples(meth, dist="correlation", method="ward", plot=TRUE) #find similarity in method
+        #Principal component analysis - brings out variation and strong pattern in sample (helps to visualize/explore)
+        PCASamples(meth, screeplot=TRUE)
+        PCASamples(meth) #is this important
+        
+    break
+    }
+}
 
-#correlation
-getCorrelation(meth,plot=TRUE)
 
-#Cluster the samples to find similarity in method
-clusterSamples(meth, dist="correlation", method="ward", plot=TRUE)
+#To execute the function
+Analysis(meth)
 
-#Principal component analysis - brings out variation and strong pattern in sample (helps to visualize/explore)
-PCASamples(meth, screeplot=TRUE)
-PCASamples(meth) #is this important
 
 #plots and graphs - 1) barplot of all samples
 barplot(samples,
