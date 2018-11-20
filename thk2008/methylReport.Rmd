@@ -1,10 +1,16 @@
+<!--
+Usage:
+  Rscript -e 'library(rmarkdown); render("methylReport.Rmd","pdf_document")'
+-->
 ---
 title: "methylationReport"
 author: "thk2008"
-date: "October 24, 2018"
+date: "November 20, 2018"
 output:
-  pdf_document: default
-  html_document: default
+  pdf_document:
+    toc: true
+  html_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -26,10 +32,8 @@ maybe put proposal in here and modify it as we learn stuff
 
 <!-- load data -->
 ```{r echo=FALSE}
-# for now we are going to assume it's there
-# and load it
+# for now we are going to assume it's there and load it
 load("rdata/myobj.rda")
-
 ```
 
 ## Coverage
