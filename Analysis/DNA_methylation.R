@@ -1,24 +1,52 @@
-#R packages
+---
+title: "MethylReport"
+author: "Shazeda Omar"
+date: "11/28/2018"
+output: html_document:
+
+---
+
+## Purpose 
+
+The purpose of this project is to develop a software for the analysis of multiple DNA methylation data obtained from Next Generation Sequencing Technology by inputting, annotating and generating data. The software will be able to evaluate DNA methylation data for visualization, location of methylation sites and coverage.
+
+
+## Background
+
+The human genome contains essential information that is used to maintain the expression of genes and the regulation of proteins in different organ systems. Underlying mechanisms can directly or indirectly affect this process resulting in gene alterations. Epigenetics is a process that creates alterations in the gene expressions without modifying the DNA sequence1. The DNA methylation mechanism that is crucial for development with an important role in many vital processes including X-chromosome inactivation, and suppression of repetitive element transcription and, when dysregulated, contributes to diseases like cancer2. DNA methylation influences gene expression by affecting the nitrogenous cytosine base and areas where the cytosine follows a guanine base, commonly called CpG islands (CGIs) or short interspersed sequences. 
+
+Many tools developed can significantly differ the common genomic pattern by being GC-rich, CpG-rich, and predominantly nonmethylated3. Methylation is regulated by DNA  methyltransferases (Dnmts) which shifts the methyl group from the S-adenyl methionine (SAM) to the fifth carbon cytosine residue forming a 5-methylcytosine4.  The detection of DNA methylation uses bisulfite sequencing in  protocols such as Enhanced Reduced Representation Bisulfite Sequencing (ERRBS)5, Reduced Representation Bisulfite Sequencing (RRBS)6, Whole-Genome Bisulfite sequencing (WGBS) and Methylome Capture Sequencing (targeted methylome sequencing)7. The hypothesis conducted will evaluate the Enhanced Reduced Representation Bisulfite Sequencing (ERRBS) protocol which provides improved coverage of DNA methylation sites across specific regions of the genome compared to other protocols.
+
+Bisulfite sequencing detection is used to identify segments of methylation or nonmethylation in the DNA, it uses sodium bisulfite to find the amination reactions of cytosine and 5-methylcytosine(5mC)5.  Cytosines in single-stranded DNA are converted into uracil and recognized as thymine in PCR amplification, but 5mCs are immune to this conversion and remain as cytosines allowing it to be analyzed from unmethylated cytosines8.  Both the RRBS and ERRBS protocol are similar in that they use bisulfite sequencing and restriction enzymes. The RRBS protocol uses methylation-dependent restriction enzymes (MSREs) in fragments of 500-600bps7 whereas the ERRBS is an advanced protocol derived from RRBS which produces more in-depth methylation coverage of CpG islands (CGIs) or cytosines. The ERRBS protocol uses a restriction enzyme that generates a low molecular fragment weight in library preparation5 and yields approximately ten percent of genomic CpG sites9. This provides enrichment in CpG islands and CpG shores, promoters, exons, introns and intergenic regions9. 
+
+The Whole genome bisulfite sequencing (WGBS) is produced by Next Generation Sequencing technology (NGS) that can capture all the cytosine in the genome at single-nucleotide resolution but has several drawbacks amplified with increasing sample numbers7. While the WGBS is increasingly accessible for both primary and clinical research10,  its cost has remained substantial and limits the widespread use for multi-sample comparison of large methylomes such as mammals11. An alternative to WGBS is Methylome Capture Sequencing or targeted methylome sequencing (TMS). Methylome Capture Sequencing is based on the capture of methylated DNA using the methyl-binding domain of methyl CpG binding protein and subsequent NGS of eluted DNA, allowing the DNA to be separated by salt gradients according to its CpG methylation density12. An aligner tool, Bismark uses a combination of bisulfite treatment of DNA and high throughput sequencing (BS-Seq) for efficient time analysis, read mapping and methylation calling13. 
+
+
+```{r ,include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(methylKit)
 library(GenomicRanges)
-library(knitr)
 library(vioplot)
+source("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore")
+```
 
+
+```{r ,include=FALSE}
 #read in files - path file stored in variable data.file.path
 data.file.path <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore"
-data <- data.file.path
-file.names.list <- list.files(path = data, pattern = "*.mincov0.txt.gz", full.names = TRUE)
+file.names.list <- list.files(path = data.file.path, pattern = "*.mincov0.txt.gz", full.names = TRUE)
 file.names.list
+```
 
-#set working directory
+
+```{r ,include=FALSE}
 setwd("~/Desktop/Internship_notes/MethylCall_Data_Plots")
-getwd()
+#getwd()
+load("myobj.rda")
+```
 
-#methread for Multiple Files - load myobj.rda that is already created
-load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/myobj.rda")
-
-#if not myobj will be created
-if  (!exists("myobj")) {
+```{r ,include=FALSE}
+if  (!exists("myobj")) {    #if not myobj will be created
     cat("Did not find myobj\n")
     if(file.exists("myobj.rda")) {
         cat("myobj.rda loading\n")
@@ -37,7 +65,10 @@ if  (!exists("myobj")) {
     }
 }
 
-#Methylation function:Counts the number of rows, descriptive statistics, percent methylation distribution, histogram with the percentage of CpG for each dataset.
+``` 
+
+```{r ,include=FALSE}
+
 methylation <- function(myobj) {
     for (i in 1:length(myobj)) {
         sample.output <- myobj[[i]]@sample.id
@@ -51,19 +82,21 @@ methylation <- function(myobj) {
     }
 }
 
-#to execute function
-methylation(myobj)
+#methylation(myobj) #to execute function --error!! 
+```
 
-
-#Output number of rows for each sample
+# Number of rows and CpGs for the given samples
+```{r, echo= FALSE}
+#Output number of rows for each sample - cpg sites 
 samples <- sapply(myobj,nrow)
 names(samples) <- getSampleID(myobj)
-file.list <- as.list(samples)
-file.list
+
+print(samples)
+
+```
 
 
-
-{r, echo= FALSE}
+```{r, include = FALSE}
 #save meth file so that it doesn't have to be created
 if  (!exists("filter_myobj")) {
     cat("Did not find filter_myobj\n")
@@ -79,8 +112,9 @@ if  (!exists("filter_myobj")) {
     }
 }
 
+```
 
-{r, echo= FALSE}
+```{r, include= FALSE}
 #save meth file so that it doesn't have to be created
 if  (!exists("meth")) {
     cat("Did not find meth.myobj\n")
@@ -100,16 +134,21 @@ if  (!exists("meth")) {
 load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/meth.rda")
 load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/filter_myobj.rda")
 
+```
 
-#getMethylationStats doesn't give enough information to plot nor extract sample
-#meth and percentMethylationStat extra data
+#Using perc.meth from the Methylation package to compare data 
+```{r}
 perc.meth=percMethylation(meth)
 hist(perc.meth)
-
 dens <- apply(perc.meth, 2, density)
 plot(NA, xlim=range(sapply(dens, "[", "x")), ylim=range(sapply(dens, "[", "y")))
 mapply(lines, dens, col=1:length(dens))
 legend("topright", legend=names(dens), fill=1:length(dens))
+
+```
+
+
+
 
 
 #for loop and function to obtain correlation and Cluster Samples
