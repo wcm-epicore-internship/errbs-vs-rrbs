@@ -61,49 +61,56 @@ names(samples) <- getSampleID(myobj)
 file.list <- as.list(samples)
 file.list
 
-#filtering the data by read coverage to avoid bias (obtain coverage that is not too high or too low)
-filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
-hi.count=NULL,hi.perc=99.9)
-head(filter_myobj, n=20)
 
-#Merging sample to find bases covered in samples
-meth=unite(myobj, destrand=FALSE)
-head(meth) #view the file meth
 
+{r, echo= FALSE}
 #save meth file so that it doesn't have to be created
-if  (!exists("meth.rda")) {
+if  (!exists("filter_myobj")) {
+    cat("Did not find filter_myobj\n")
+    if(file.exists("filter_myobj.rda")) {
+        cat("filter_myobj.rda loading\n")
+        load("filter_myobj.rda")
+    } else {
+        cat("creating and saving ")
+      filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
+      hi.count=NULL,hi.perc=99.9)
+        save(filter_myobj,file = "filter_myobj.rda")
+        cat ("filter_myobj.rda saved \n")
+    }
+}
+
+
+{r, echo= FALSE}
+#save meth file so that it doesn't have to be created
+if  (!exists("meth")) {
     cat("Did not find meth.myobj\n")
     if(file.exists("meth.rda")) {
         cat("meth.rda loading\n")
         load("meth.rda")
     } else {
-        cat("creating and saving meth.rda\n")
-        meth.rda = filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
-        hi.count=NULL,hi.perc=99.9)
+        cat("creating and saving ")
         meth=unite(myobj, destrand=FALSE)
-        save(myobj,file = "meth.rda")
+        save(meth,file = "meth.rda")
         cat ("meth.rda saved \n")
     }
 }
 
+
 #load meth.rdathat is already created
 load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/meth.rda")
-
-#creates a methylBase object where only CpGs covered with at least 1 sample per group will be returned
-meth.min=unite(myobj,min.per.group=1L)
-head(meth.min)
+load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/filter_myobj.rda")
 
 
 #getMethylationStats doesn't give enough information to plot nor extract sample
 #meth and percentMethylationStat extra data
-x <- meth #rda save
-perc.meth=percMethylation(x)
+perc.meth=percMethylation(meth)
 hist(perc.meth)
 
 dens <- apply(perc.meth, 2, density)
 plot(NA, xlim=range(sapply(dens, "[", "x")), ylim=range(sapply(dens, "[", "y")))
 mapply(lines, dens, col=1:length(dens))
 legend("topright", legend=names(dens), fill=1:length(dens))
+
 
 #for loop and function to obtain correlation and Cluster Samples
 Analysis <- function(meth) {
