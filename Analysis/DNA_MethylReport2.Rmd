@@ -6,7 +6,7 @@ Usage:
 ---
 title: "MethylReport"
 author: "Shazeda Omar"
-date: "12/06/2018"
+date: "11/28/2018"
 output: html_document:
 
 ---
@@ -280,35 +280,6 @@ for (i in 1:length(filt_coverage_vals))  {
     plot(density(filt_coverage_vals[[i]]))
     
 }
-```
-
-
-library(BSgenome.Hsapiens.UCSC.hg19)
-#using GenomicRanges
-```{r}
-gr=GRanges(seqnames=c("Chr1"),
-ranges=IRanges(start=c(50,150,200), end = c(100,200,300)), #ranges contain the start and end position of the genome
-strand=c("+", "-","-"))
-
-gr[1,]
-seqnames(gr)
-mcols(gr)
-
-```
-
-
-```{r}
-cgr <- GRanges(seqnames=myobj$chr[,2],
-ranges=IRanges(myobj$start[,3],end=myobj$end[,3]),
-strand=myobj$strand[,4],
-coverage=myobj$coverage[,5],
-numC=myobj$numCs[,6],
-numT=myobj$numTs[,7])
-
-chr.len      <- seqlengths(Hsapiens)
-seqinfo(cgr) <- seqinfo(Hsapiens)[names(seqlengths(cgr))]
-cgr
-
 ```
 
 
