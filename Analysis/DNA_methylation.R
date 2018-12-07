@@ -4,19 +4,28 @@ library(GenomicRanges)
 library(knitr)
 library(vioplot)
 
-#read in files - path file stored in variable data.file.path
-data.file.path <- "/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Epicore"
-list_of_files <- list.files(path = data, pattern = "*.mincov0.txt.gz", full.names = TRUE)
+#read in and list files
+analysis.directory <- "/Users/shazedaomar/Desktop/Internship_notes"
+working.directory <- paste(analysis.directory, "MethylCall_Data_Plots", sep="/")
+data.file.directory <- paste(analysis.directory, "MethylCall_Data_Epicore", sep="/")
+list_of_files <- list.files(path = data.file.directory , pattern = "*.mincov0.txt.gz", full.names = TRUE)
 list_of_files
 
-#set working directory
-setwd("~/Desktop/Internship_notes/MethylCall_Data_Plots")
-#getwd()
 
-#methread for Multiple Files - load myobj.rda that is already created
+#check working directory
+if (file.exists(working.directory)) {
+    cat("set working directory to [", working.directory, "]\n")
+    setwd(working.directory)
+} else{
+    stop("cannot find working directory [", working.directory,"]")
+}
+
+#methread for Multiple Files - load myobj.rda that is already created.
+#Otherwise, create the data object 'myobj' from the raw methylcall data files and save it.
 load("myobj.rda")
 
-#if not myobj will be created
+
+#If myobj is not created, create and save the data object myobj from the raw methylcall data files
 if  (!exists("myobj")) {
     cat("Did not find myobj\n")
     if(file.exists("myobj.rda")) {
@@ -36,6 +45,7 @@ if  (!exists("myobj")) {
     }
 }
 
+
 #Methylation function:Counts the number of rows, descriptive statistics, percent methylation distribution, histogram with the percentage of CpG for each dataset.
 methylation <- function(myobj) {
     for (i in 1:length(myobj)) {
@@ -54,12 +64,6 @@ methylation <- function(myobj) {
 methylation(myobj)
 
 
-#Output number of rows/ CpGs for each sample
-samples <- sapply(myobj,nrow)
-names(samples) <- getSampleID(myobj)
-file.list <- as.list(samples)
-file.list
-
 #filtering the data by read coverage to avoid bias (obtain coverage that is not too high or too low)
 if  (!exists("filter_myobj")) {
     cat("Did not find filter_myobj\n")
@@ -68,8 +72,8 @@ if  (!exists("filter_myobj")) {
         load("filter_myobj.rda")
     } else {
         cat("creating and saving ")
-      filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
-      hi.count=NULL,hi.perc=99.9)
+        filter_myobj = filterByCoverage(myobj,lo.count=10,lo.perc=NULL,
+        hi.count=NULL,hi.perc=99.9)
         save(filter_myobj,file = "filter_myobj.rda")
         cat ("filter_myobj.rda saved \n")
     }
@@ -95,124 +99,114 @@ load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/meth.rda
 load("/Users/shazedaomar/Desktop/Internship_notes/MethylCall_Data_Plots/filter_myobj.rda")
 
 
-
-#Using perc.meth from the Methylation package to compare data 
+#Using perc.meth from the Methylation package to compare data
 perc.meth=percMethylation(meth)
-hist(perc.meth)
 dens <- apply(perc.meth, 2, density)
-plot(NA, xlim=range(sapply(dens, "[", "x")), ylim=range(sapply(dens, "[", "y")))
+plot(NA, xlab = "Number of CpG Unit ", ylab= "Percent (%)", main= "Distribution of Methylation ",
+xlim=range(sapply(dens, "[", "x")), ylim=range(sapply(dens, "[", "y")))
 mapply(lines, dens, col=1:length(dens))
 legend("topright", legend=names(dens), fill=1:length(dens))
 
 
 #for loop and function to obtain correlation and Cluster Samples
+#creates one correlation chart, cluster of sample chart and PCA sample chart.
+#break ends the for loop
 Analysis <- function(meth) {
     
-    for (i in 1:length(meth)) {
-        getCorrelation(meth,plot=TRUE)
-        clusterSamples(meth, dist="correlation", method="ward", plot=TRUE) #find similarity in method
-        #Principal component analysis - brings out variation and strong pattern in sample (helps to visualize/explore)
-        PCASamples(meth, screeplot=TRUE)
-        PCASamples(meth) #is this important
-        
-    break
-    }
+    getCorrelation(meth,plot=TRUE)
+    clusterSamples(meth, dist="correlation", method="ward", plot=TRUE) #find similarity in method
+    #Principal component analysis - brings out variation and strong pattern in sample (helps to visualize/explore)
+    PCASamples(meth, screeplot=TRUE)
+    PCASamples(meth) #is this important
+    
 }
-
 
 #To execute the function
 Analysis(meth)
 
 
-#plots and graphs - 1) barplot of all samples
-barplot(samples,
-main="Analysis",
-xlab="Methylation Method",
-ylab="Frequency",
-col= "blue")
-dev.new()
-pdf(paste(barplot(samples), "barplot_samples.pdf", sep = "_"))
-#dev.off()
-
-# 2) plot the samples
-plot(samples,
-main="Analysis",
-main = "",
-xlab = "" ,
-ylab = "frequency",
-type = "o", #plot type
-col = "red") #plot color
-axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2) #changes the labels 1,2,3,4,5 with sample.id names (works with this line of code)
-dev.new()
-pdf(paste(plot(samples), "plot_samples.pdf", sep = "_"))
-#dev.off()
-
-#Store and output the sample.id
+#Store and output the sample.id and nrow for each sample (CpGs)
 coverage_vals <- lapply(myobj, function(i){
-  x <- getData(i)$coverage
+    x <- getData(i)$coverage #?
 })
-names(coverage_vals) <- getSampleID(myobj)
-names(coverage_vals)
+names(coverage_vals) <- getSampleID(myobj) #extra names from sample myobj
+file.list <- (sapply(myobj,nrow)) #number of samples
+names(file.list) <- names(coverage_vals)
+file.list
 
-#boxplot of samples
+
+#plots and graphs - barplot of all samples
+barplot(file.list,
+        main="Analysis",
+        xlab="Methylation Method",
+        ylab="Frequency",
+        col= "blue")
+
+
+#filter the coverage 
 filt_coverage_vals <- lapply(coverage_vals, function(i){
     x <- i[i >= 10 & i <= 500]
 })
-boxplot(filt_coverage_vals)
 
-#function for graphs
+
+#graphs
 plots <- function(filt_coverage_vals) {
     
-    for (i in 1:length(filt_coverage_vals))  {
-        
-        orig_margins <- par()$mar
-        cl <- rainbow(6)
-        par(mar=c(7.1,4.1,4.1,2.1))
-        plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="Methylation analysis", xlab="Method",ylab="Coverage")
-        for (i in 1:length(filt_coverage_vals)){ vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T, col=cl[i]) }
-        axis(2)
-        axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
-        
-        plot(0, type="n", xlim=c(0,7), ylim=c(1,3), axes=F, main="all graphs must have labels", xlab="",ylab="")
-        for (i in 1:length(filt_coverage_vals)){ vioplot(log10(filt_coverage_vals[[i]]), h=0.1, at=i, add=T, col=cl[i]) }
-        
-        
-        par(mfrow=c(3,2))
-        cl <- rainbow(6)
-        for (i in 1:length(filt_coverage_vals)){ plot(density(filt_coverage_vals[[i]], bw=0.1), col=cl[i]) }
-        
-        par(mfrow=c(1,1))
-        cl <- rainbow(6)
-        plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="", xlab="",ylab="")
-        title(main = "Methylation Coverage", sub = "Coverage (0-500)", xlab = NULL, ylab = "C methylated",
-        line = NA, outer = FALSE, legend("topright", legend=names(coverage_vals), fill=cl))
-        for (i in 1:length(filt_coverage_vals)){ lines(density(filt_coverage_vals[[i]],bw=0.1), col=cl[i]) }
-        axis(1)
-        axis(2)
-        
-        
-        par(mfrow=c(3,2))
-        cl <- rainbow(6)
-        for (i in 1:length(coverage_vals)){ plot(density(coverage_vals[[i]], bw=0.1), col=cl[i]) }
-        axis(1)
-        axis(2)
-        
-        
-        par(mfrow=c(1,1))
-        cl <- rainbow(6)
-        plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="", xlab="",ylab="")
-        title(main = "Methylation Coverage", sub = "Coverage (0-500)", xlab = NULL, ylab = "C methylated",
-        line = NA, outer = FALSE, legend("topright", legend=names(coverage_vals), fill=cl))
-        for (i in 1:length(coverage_vals)) {lines(density(coverage_vals[[i]],bw=0.1), col=cl[i]) }
-        axis(2)
-        axis(1)
-        
-        
-        break
-    }}
+    orig_margins <- par()$mar  # (thk2008) this needs to be done only once
+    cl <- rainbow(6)           # (thk2008) save for this, it can be used for all the plots
+    
+    
+    #vioplot graph
+    par(mar=c(7.1,4.1,4.1,2.1)) # changing the margins to see sample names
+    # need to correct the labels
+    plot(0, type="n", xlim=c(0,7), ylim=c(0,500), axes=F, main="Methylation analysis", xlab="", ylab="Coverage")
+    for (i in 1:length(filt_coverage_vals)) {
+        vioplot(filt_coverage_vals[[i]], h=10, at=i, add=T, col=cl[i])
+    }
+    axis(2)
+    axis(1, labels=names(filt_coverage_vals), at=seq(1,6), las=2)
+    
+    
+    #Bandwith graphs
+    par(mfrow=c(3,2))
+    for (i in 1:length(filt_coverage_vals)) {
+        plot(density
+        (filt_coverage_vals[[i]], bw=0.1), col=cl[i])
+    }
+    
+    
+    #methylation coverage graph
+    par(mfrow=c(1,1))
+    # (thk2008) careful, plotting filt_coverage_vals but legend has names from a different data object
+    plot(0, type="n", xlim=c(0,500), ylim=c(0,0.21), axes=F, main="", xlab="",ylab="")
+    title(main = "Methylation Coverage", sub = "Coverage (0-500)", xlab = NULL, ylab = "C methylated",
+    line = NA, outer = FALSE, legend("topright", legend=names(coverage_vals), fill=cl))
+    for (i in 1:length(filt_coverage_vals)) {
+        lines(density(filt_coverage_vals[[i]],bw=0.1), col=cl[i])
+    }
+    axis(1)
+    axis(2)
+    
+    #graph
+    par(mfrow=c(1,1))
+    # (thk2008) careful, plotting filt_coverage_vals but legend has names from a different data object
+    # also be careful cutting and pasting code. it will perpetuate the discrepancy or worse an error.
+    plot(0, type="n", xlim=c(0,500), ylim=c(0,3.5), axes=F, main="", xlab="",ylab="")
+    title(main = "Methylation Coverage", sub = "Coverage (0-500)", xlab = NULL, ylab = "C methylated",
+    line = NA, outer = FALSE, legend("topright", legend=names(coverage_vals), fill=cl))
+    
+    for (i in 1:length(coverage_vals)) {
+        lines(density(coverage_vals[[i]],bw=0.1), col=cl[i])
+    }
+    axis(2)
+    axis(1)
+    
+}
+
 
 #execute the function
 plots(filt_coverage_vals)
+
 
 #find the bandwidth for each sample - highest bw = 3.63, lowest bw = 0.1786
 plot(density(filt_coverage_vals[[i]])) #N= 12646218, Bandwidth=0.1786
@@ -233,6 +227,7 @@ for (i in 1:length(filt_coverage_vals))  {
     
 }
 
+
 x <- myobj[[1]]$numCs / myobj[[1]]$coverage *100
 hist(x,
 main="Number of Cs",
@@ -247,7 +242,7 @@ xlab="% methylation per base",
 ylab="Frequency",
 col= "yellow")
 
-#library(BSgenome.Hsapiens.UCSC.hg19)
+library(BSgenome.Hsapiens.UCSC.hg19)
 #Using genomicRanges
 gr=GRanges(seqnames=c("Chr1"),
 ranges=IRanges(start=c(50,150,200), end = c(100,200,300)), #ranges contain the start and end position of the genome
@@ -256,6 +251,7 @@ strand=c("+", "-","-"))
 gr[1,]
 seqnames(gr)
 mcols(gr)
+
 
 #need help
 cgr <- GRanges(seqnames=myobj$chr[,2],
