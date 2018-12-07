@@ -177,7 +177,7 @@ Analysis <- function(meth) {
     
 }
 
-#Analysis(meth)
+Analysis(meth)
 ```
 
 
@@ -267,7 +267,7 @@ plots <- function(filt_coverage_vals) {
 
 
 #execute the function
-#plots(filt_coverage_vals)
+plots(filt_coverage_vals)
 
 ```
 
