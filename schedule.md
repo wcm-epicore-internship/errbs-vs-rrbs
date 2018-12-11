@@ -5,11 +5,11 @@
 **Week 4 – Week 6:** Compare methylation library protocols. What's the difference in the library preparation protocols?
 - The [ERRBS paper](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1002781)
 
-**Week 7 – Week 9:** Read about the MethylKit and install into R studio. Run analysis on data using library protocol data and include reading methylcall files, computing statistics, plot methylation values and compare methylation site calls.
+**Week 7 – Week 9:** Read about the MethylKit and install into R studio. Run analysis on data using library protocol data and include reading in methylcall files, computing statistics, plot methylation values and compare methylation site calls.
 
-**Week 10 - Week 15:** Run analysis on the DNA Methylation data such as ERRBS, RRBS, WGBS and methylome capture. Create scripts that can perform numerous analysis on DNA methylation data including reading DNA methylation files, filtering and reformatting the data, computing statistics, finding and plotting the coverage of CpG and determining methylation levels for multiple datasets.
+**Week 10 - Week 15:** Run analysis on the DNA Methylation data such as ERRBS, RRBS, WGBS and methylome capture. Create a script that can perform numerous analysis on DNA methylation data including reading DNA methylation files, filtering and reformatting the data, computing and graphing statistics, finding and plotting the coverage of CpG and determining methylation levels for multiple datasets.
 
-**Week 16 - Week 18:** Update the GitHub repository, Readme file. Prepare the final report and presentation. 
+**Week 16 - Week 18:** Create a .RMD file using Rscript, update the GitHub repository and prepare the final report. 
 
 **Methylcall data**
 - We use [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) to align the sequencing reads (fastq) and genreate methylation calls
